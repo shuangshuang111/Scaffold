@@ -1,13 +1,15 @@
 package com.integration.scaffold.relationaldataaccess.mysql.entity;
 
+import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+
 
 @Data
-@Table("user")
+@Entity
+@Table(name = "user")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
 

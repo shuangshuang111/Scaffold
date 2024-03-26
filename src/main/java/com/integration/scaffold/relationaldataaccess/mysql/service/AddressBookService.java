@@ -23,4 +23,5 @@ public interface AddressBookService {
     Page<AddressBook> getUserInfoByPage(Long userId, int pageNum, int pageSize);
 
 
+    List<String> getAllConsignee();
 }

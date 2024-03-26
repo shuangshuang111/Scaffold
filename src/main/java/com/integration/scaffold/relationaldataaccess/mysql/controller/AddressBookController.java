@@ -59,7 +59,7 @@ public class AddressBookController {
     /**
      * 根据ID删除地址信息
      */
-    @DeleteMapping ("/{id}")
+    @DeleteMapping("/{id}")
     public Result<AddressBook> deleteById(@PathVariable Long id) {
         addressBookService.deleteById(id);
         return Result.success();
@@ -86,17 +86,23 @@ public class AddressBookController {
     }
 
     /**
-     * 根据userid此用户的所有地址信息 需要分页  todo 已经有实现好的分页了，改造一下吧
+     * 根据userid此用户的所有地址信息 需要分页
      */
     @GetMapping("/UserInfoByPage/{userId}/{pageNum}/{pageSize}")
-    public PageResult<AddressBook> getUserInfoByPage(@PathVariable Long userId,@PathVariable int pageNum,@PathVariable int pageSize) {
-        Page<AddressBook> addressBookPage =addressBookService.getUserInfoByPage(userId,pageNum,pageSize);
-        long count=addressBookPage.getTotalElements();
-        List<AddressBook> addressBooklist=addressBookPage.getContent();
-        return PageResult.success(count,addressBooklist);
+    public PageResult<AddressBook> getUserInfoByPage(@PathVariable Long userId, @PathVariable int pageNum, @PathVariable int pageSize) {
+        Page<AddressBook> addressBookPage = addressBookService.getUserInfoByPage(userId, pageNum, pageSize);
+        long count = addressBookPage.getTotalElements();
+        List<AddressBook> addressBooklist = addressBookPage.getContent();
+        return PageResult.success(count, addressBooklist);
     }
 
-
+    /**
+     * 查询所有的收货人
+     */
+    @GetMapping("/consignee")
+    public Result<List<String>> getAllConsignee() {
+        return Result.success(addressBookService.getAllConsignee());
+    }
 
 
 }

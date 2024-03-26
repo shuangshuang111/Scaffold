@@ -6,12 +6,16 @@ import com.integration.scaffold.relationaldataaccess.mysql.entity.User;
 import com.integration.scaffold.relationaldataaccess.mysql.mapper.AddressBookRepository;
 import com.integration.scaffold.relationaldataaccess.mysql.mapper.UserRepository;
 import com.integration.scaffold.relationaldataaccess.mysql.service.AddressBookService;
-import org.springframework.beans.BeanUtils;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,6 +31,7 @@ public class AddressBookServiceImpl implements AddressBookService {
 
     @Autowired
     private UserRepository userRepository;
+
     @Override
     public AddressBook save(AddressBook addressBook) {
         addressBook.setCreateTime(LocalDateTime.now());
@@ -41,13 +46,16 @@ public class AddressBookServiceImpl implements AddressBookService {
     public AddressBook getById(Long id) {
         return addressBookRepository.findById(id).orElse(null);
 
-      // todo 这里直接返回null是否不好？有没有可能使用Optional进行优化 一定要对返回值为null做一个专业的整改
+        // todo 这里直接返回null是否不好？有没有可能使用Optional进行优化 一定要对返回值为null做一个专业的整改
 
     }
 
     @Override
     public List<AddressBook> listByUserId(Long userId) {
-        return addressBookRepository.listByUserId(userId);
+        AddressBook addressBook = new AddressBook();
+        addressBook.setUserId(userId);
+        Example<AddressBook> example = Example.of(addressBook);
+        return addressBookRepository.findAll(example);
     }
 
     @Override
@@ -62,12 +70,25 @@ public class AddressBookServiceImpl implements AddressBookService {
 
     @Override
     public UserAddressBookDto getAllUserInfo(Long id) {
-        UserAddressBookDto userAddressBookDto=new UserAddressBookDto();
-        Optional<User> optionalUser=userRepository.findById(id);
-        if(optionalUser.isPresent()){
-            User user=optionalUser.get();
-            BeanUtils.copyProperties(user,userAddressBookDto);
-            List<AddressBook> addressBookList=addressBookRepository.listByUserId(id);
+        UserAddressBookDto userAddressBookDto = new UserAddressBookDto();
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            Specification<AddressBook> queryCondition = new Specification<AddressBook>() {
+                @Override
+                public Predicate toPredicate(Root<AddressBook> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                    List<Predicate> predicateList = new ArrayList<>();
+                    if (id != null) {
+                        predicateList.add(criteriaBuilder.equal(root.get("userId"), id));
+                    }
+                    // 这里只是尝试下复杂查询是否真实可用，直接用了数字
+                    predicateList.add(criteriaBuilder.like(root.get("consignee"), "%云志%"));
+                    predicateList.add(criteriaBuilder.between(root.get("id"), 2, 5));
+                    return criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
+                }
+            };
+            Sort sort = Sort.by(Sort.Direction.DESC, "updateTime").and(Sort.by(Sort.Direction.ASC, "id"));
+            List<AddressBook> addressBookList = addressBookRepository.findAll(queryCondition, sort);
+
             userAddressBookDto.setAddressBooklist(addressBookList);
             return userAddressBookDto;
         }
@@ -77,12 +98,19 @@ public class AddressBookServiceImpl implements AddressBookService {
 
     @Override
     public Page<AddressBook> getUserInfoByPage(Long userId, int pageNum, int pageSize) {
-        Sort sort=Sort.by(Sort.Direction.DESC,"updateTime").and(Sort.by(Sort.Direction.ASC,"id"));
-        PageRequest pageable=PageRequest.of(pageNum, pageSize, sort) ;
-        //  Page<T> findAll(Pageable pageable);
-        Page<AddressBook> addressBookPage=addressBookRepository.findAllByUserId(userId,pageable);
+        AddressBook addressBook = new AddressBook();
+        addressBook.setUserId(userId);
+        Example<AddressBook> example = Example.of(addressBook);
+        Sort sort = Sort.by(Sort.Direction.DESC, "updateTime").and(Sort.by(Sort.Direction.ASC, "id"));
+        PageRequest pageable = PageRequest.of(pageNum, pageSize, sort);
+        Page<AddressBook> addressBookPage = addressBookRepository.findAll(example, pageable);
         return addressBookPage;
 
+    }
+
+    @Override
+    public List<String> getAllConsignee() {
+        return addressBookRepository.getAllConsignee();
     }
 
 }

@@ -1,11 +1,10 @@
 package com.integration.scaffold.relationaldataaccess.mysql.mapper;
 
-import com.integration.scaffold.relationaldataaccess.mysql.entity.AddressBook;
 import com.integration.scaffold.relationaldataaccess.mysql.entity.User;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 
-public interface UserRepository extends PagingAndSortingRepository<User, Long>,CrudRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
 }

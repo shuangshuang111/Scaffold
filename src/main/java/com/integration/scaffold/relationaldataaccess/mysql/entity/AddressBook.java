@@ -1,16 +1,17 @@
 package com.integration.scaffold.relationaldataaccess.mysql.entity;
 
+import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
 
 @Data
-@Table("address_book")
+@Entity
+@Table(name = "address_book")
 public class AddressBook {
     // todo 记录 after-saving-the-identifier-must-not-be-null-error 报错，在这里加上@Id即可
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
 
