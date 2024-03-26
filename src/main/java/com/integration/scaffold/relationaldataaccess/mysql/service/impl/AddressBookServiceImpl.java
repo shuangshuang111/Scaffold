@@ -8,6 +8,10 @@ import com.integration.scaffold.relationaldataaccess.mysql.mapper.UserRepository
 import com.integration.scaffold.relationaldataaccess.mysql.service.AddressBookService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -72,16 +76,13 @@ public class AddressBookServiceImpl implements AddressBookService {
     }
 
     @Override
-    public List<AddressBook> getUserInfoByPage(Long userId, Long pageNum, Long pageSize) {
-        List<AddressBook> addressBookList=addressBookRepository.getUserInfoByPage(userId,pageNum,pageSize);
-        if(addressBookList.size()>0){
-            return addressBookList;
-        }
-        return new ArrayList<AddressBook>();
+    public Page<AddressBook> getUserInfoByPage(Long userId, int pageNum, int pageSize) {
+        Sort sort=Sort.by(Sort.Direction.DESC,"updateTime").and(Sort.by(Sort.Direction.ASC,"id"));
+        PageRequest pageable=PageRequest.of(pageNum, pageSize, sort) ;
+        //  Page<T> findAll(Pageable pageable);
+        Page<AddressBook> addressBookPage=addressBookRepository.findAllByUserId(userId,pageable);
+        return addressBookPage;
+
     }
 
-    @Override
-    public Long countUserInfo(Long userId) {
-        return addressBookRepository.countUserInfo(userId);
-    }
 }

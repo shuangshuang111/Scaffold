@@ -6,6 +6,7 @@ import com.integration.scaffold.relationaldataaccess.mysql.dto.UserAddressBookDt
 import com.integration.scaffold.relationaldataaccess.mysql.entity.AddressBook;
 import com.integration.scaffold.relationaldataaccess.mysql.service.AddressBookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -88,9 +89,10 @@ public class AddressBookController {
      * 根据userid此用户的所有地址信息 需要分页  todo 已经有实现好的分页了，改造一下吧
      */
     @GetMapping("/UserInfoByPage/{userId}/{pageNum}/{pageSize}")
-    public PageResult<AddressBook> getUserInfoByPage(@PathVariable Long userId,@PathVariable Long pageNum,@PathVariable Long pageSize) {
-        List<AddressBook> addressBooklist=addressBookService.getUserInfoByPage(userId,pageNum,pageSize);
-        Long count=addressBookService.countUserInfo(userId);
+    public PageResult<AddressBook> getUserInfoByPage(@PathVariable Long userId,@PathVariable int pageNum,@PathVariable int pageSize) {
+        Page<AddressBook> addressBookPage =addressBookService.getUserInfoByPage(userId,pageNum,pageSize);
+        long count=addressBookPage.getTotalElements();
+        List<AddressBook> addressBooklist=addressBookPage.getContent();
         return PageResult.success(count,addressBooklist);
     }
 

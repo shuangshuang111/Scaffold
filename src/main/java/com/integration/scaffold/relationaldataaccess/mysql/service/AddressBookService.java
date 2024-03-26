@@ -2,6 +2,7 @@ package com.integration.scaffold.relationaldataaccess.mysql.service;
 
 import com.integration.scaffold.relationaldataaccess.mysql.dto.UserAddressBookDto;
 import com.integration.scaffold.relationaldataaccess.mysql.entity.AddressBook;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface AddressBookService {
     UserAddressBookDto getAllUserInfo(Long id);
 
 
-    List<AddressBook> getUserInfoByPage(Long userId, Long pageNum, Long pageSize);
+    Page<AddressBook> getUserInfoByPage(Long userId, int pageNum, int pageSize);
 
-    Long countUserInfo(Long userId);
+
 }
