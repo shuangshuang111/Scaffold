@@ -72,6 +72,7 @@ public class AddressBookServiceImpl implements AddressBookService {
     public UserAddressBookDto getAllUserInfo(Long id) {
         UserAddressBookDto userAddressBookDto = new UserAddressBookDto();
         Optional<User> optionalUser = userRepository.findById(id);
+        // Specification实现动态查询，Root即root 获取实体类具体属性, CriteriaBuilder即cb 拼接查询条件的，拼接好查询条件之后，通过 CriteriaQuery即query 实现查询
         if (optionalUser.isPresent()) {
             Specification<AddressBook> queryCondition = new Specification<AddressBook>() {
                 @Override
@@ -104,6 +105,10 @@ public class AddressBookServiceImpl implements AddressBookService {
         Sort sort = Sort.by(Sort.Direction.DESC, "updateTime").and(Sort.by(Sort.Direction.ASC, "id"));
         PageRequest pageable = PageRequest.of(pageNum, pageSize, sort);
         Page<AddressBook> addressBookPage = addressBookRepository.findAll(example, pageable);
+//         JpaRepositoryImplementation<T, ID> 继承 JpaSpecificationExecutor<T>
+//         JpaSpecificationExecutor<T> 里面有 Page<T> findAll(Specification<T> spec, Pageable pageable);方法 可以写复杂的查询条件
+//         JpaRepository<T, ID> extends ListCrudRepository<T, ID>, ListPagingAndSortingRepository<T, ID>, QueryByExampleExecutor<T>
+//         QueryByExampleExecutor<T> 里面有<S extends T> Page<S> findAll(Example<S> example, Pageable pageable); 可以写简单点的查询方法
         return addressBookPage;
 
     }

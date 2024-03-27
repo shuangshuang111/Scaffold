@@ -36,3 +36,8 @@ Spring JDBC 是一种较低级别的方法，它在标准 JDBC 上提供了一�
 Spring Data JPA 是一种更高级别的抽象，它与对象及其元数据一起自动处理 SQL 创建和结果映射。
 Spring JDBC 和 Spring Data JPA 之间的选择通常归结为项目的特定需求和开发团队的偏好。对于那些喜欢完全控制 SQL 并拥有管理 SQL 专业知识的人来说，Spring JDBC 是一个绝佳的选择。
 另一方面，Spring Data JPA 提供了更高级别的抽象，可以大大加快复杂应用程序的开发时间，但可能会牺牲一些性能和控制
+如何写分页的复杂查询？
+JpaRepositoryImplementation<T, ID> 继承 JpaSpecificationExecutor<T>
+JpaSpecificationExecutor<T> 里面有 Page<T> findAll(Specification<T> spec, Pageable pageable);方法 可以写复杂的查询条件
+JpaRepository<T, ID> extends ListCrudRepository<T, ID>, ListPagingAndSortingRepository<T, ID>, QueryByExampleExecutor<T>
+QueryByExampleExecutor<T> 里面有<S extends T> Page<S> findAll(Example<S> example, Pageable pageable); 可以写简单点的查询方法
