@@ -3,8 +3,8 @@ package com.integration.scaffold.relationaldataaccess.mysql.common;
 public class Result <T>{
     // todo 这里是在百度借鉴的，并没有在重量级的文档上看到，以后会做修改 不清楚它是否要实现序列化接口，所以未实现，并且没有重写equals和hashCode方法
     private T datas;
-    private Integer resp_code;
-    private String resp_msg;
+    private Integer respCode;
+    private String respMsg;
     public static <T> Result<T> success(T model, String msg) {
         return of(model, CodeEnum.SUCCESS.getCode(), msg);
     }
@@ -38,40 +38,40 @@ public class Result <T>{
         return this.datas;
     }
 
-    public Integer getResp_code() {
-        return this.resp_code;
+    public Integer getrespCode() {
+        return this.respCode;
     }
 
-    public String getResp_msg() {
-        return this.resp_msg;
+    public String getrespMsg() {
+        return this.respMsg;
     }
 
     public void setDatas(T datas) {
         this.datas = datas;
     }
 
-    public void setResp_code(Integer resp_code) {
-        this.resp_code = resp_code;
+    public void setrespCode(Integer respCode) {
+        this.respCode = respCode;
     }
 
-    public void setResp_msg(String resp_msg) {
-        this.resp_msg = resp_msg;
+    public void setrespMsg(String respMsg) {
+        this.respMsg = respMsg;
     }
 
 
     public Result() {
     }
 
-    public Result(Integer resp_code, String resp_msg) {
-        this.resp_code = resp_code;
-        this.resp_msg = resp_msg;
+    public Result(Integer respCode, String respMsg) {
+        this.respCode = respCode;
+        this.respMsg = respMsg;
 
     }
 
-    public Result(T datas, Integer resp_code, String resp_msg) {
+    public Result(T datas, Integer respCode, String respMsg) {
         this.datas = datas;
-        this.resp_code = resp_code;
-        this.resp_msg = resp_msg;
+        this.respCode = respCode;
+        this.respMsg = respMsg;
 
     }
 

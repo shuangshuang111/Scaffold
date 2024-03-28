@@ -118,8 +118,8 @@ public class AddressBookControllerTest {
                         "        \"updateUser\": 1111111,\n" +
                         "        \"isDeleted\": 1\n" +
                         "    },\n" +
-                        "    \"resp_code\": 200,\n" +
-                        "    \"resp_msg\": \"操作成功!\"\n" +
+                        "    \"respCode\": 200,\n" +
+                        "    \"respMsg\": \"操作成功!\"\n" +
                         "}"));
     }
 
@@ -136,7 +136,7 @@ public class AddressBookControllerTest {
         mockMvc.perform(delete("/addressBook/100"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"datas\":null,\"resp_code\":200,\"resp_msg\":\"操作成功!\"}"));
+                .andExpect(content().json("{\"datas\":null,\"respCode\":200,\"respMsg\":\"操作成功!\"}"));
     }
 
     @Test
@@ -185,7 +185,7 @@ public class AddressBookControllerTest {
         mockMvc.perform(get("/addressBook/UserInfo/2"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"datas\":null,\"resp_code\":200,\"resp_msg\":\"操作成功!\"}"));
+                .andExpect(content().json("{\"datas\":null,\"respCode\":200,\"respMsg\":\"操作成功!\"}"));
 
     }
 
@@ -212,7 +212,7 @@ public class AddressBookControllerTest {
         mockMvc.perform(get("/addressBook/consignee"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"datas\":[\"云志\",\"霜霜\"],\"resp_code\":200,\"resp_msg\":\"操作成功!\"}"));
+                .andExpect(content().json("{\"datas\":[\"云志\",\"霜霜\"],\"respCode\":200,\"respMsg\":\"操作成功!\"}"));
     }
 
     // WebTestClient 是围绕 WebClient 的薄壳，可用于执行请求并公开专用的流利API来验证响应。
