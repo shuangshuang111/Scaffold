@@ -10,6 +10,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -34,6 +35,12 @@ public class AddressBookServiceImpl implements AddressBookService {
 
     @Override
     public AddressBook save(AddressBook addressBook) {
+
+        if(Optional.ofNullable(addressBook.getId()).isPresent() ){
+            addressBook.setUpdateTime(LocalDateTime.now());
+            addressBook.setUpdateUser(11111111l);
+            return addressBookRepository.save(addressBook);
+        }
         addressBook.setCreateTime(LocalDateTime.now());
         addressBook.setUpdateTime(LocalDateTime.now());
         // todo 这里的createUser都写成了1111111这个工号，之后将登录功能集成进来之后，可以获得当前用户，写入当前用户的工号
@@ -63,10 +70,6 @@ public class AddressBookServiceImpl implements AddressBookService {
         addressBookRepository.deleteById(id);
     }
 
-    @Override
-    public AddressBook update(AddressBook addressBook) {
-        return addressBookRepository.save(addressBook);
-    }
 
     @Override
     public UserAddressBookDto getAllUserInfo(Long id) {

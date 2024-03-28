@@ -1,19 +1,29 @@
 package com.integration.scaffold.relationaldataaccess.mysql;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.integration.scaffold.relationaldataaccess.mysql.common.PageResult;
+import com.integration.scaffold.relationaldataaccess.mysql.common.Result;
+import com.integration.scaffold.relationaldataaccess.mysql.entity.AddressBook;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.Assert;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles(value="test")
+@ActiveProfiles(value = "test")
 public class AddressBookControllerTest {
     // java.lang.IllegalStateException: Configuration error: found multiple declarations of @BootstrapWith for test class [com.integration.scaffold.relationaldataaccess.mysql.AddressBookControllerTest]: [@org.springframework.test.context.BootstrapWith(value=org.springframework.boot.test.context.SpringBootTestContextBootstrapper.class),
     // @org.springframework.test.context.BootstrapWith(value=org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper.class)]
@@ -33,18 +43,62 @@ public class AddressBookControllerTest {
     //4 如果涉及到第三方依赖，如数据库、服务间调用、Redis等，可以考虑服务虚拟化方案。
     // 大概意思就是：尝试执行无效的SQL语句时引发代码42001的错误，原因就是 H2 不支持
     //MySQL 的 ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 这些设置，创建表的时候去掉就好了。
+    //   mockMvc.perform(MockMvcRequestBuilders.post("/pis/config/add")  表单入参写法
+    //                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+    //                .param("key", "key-test")
+    //                .param("value", "v_test")
+    //                .param("summary", "简介")
+    //                .accept(MediaType.APPLICATION_JSON))
+    //                .andDo(print());
 
 
     @Autowired
     private MockMvc mockMvc;
 
+
     @Test
-    public void testGet() throws Exception{
-        mockMvc.perform(get("/addressBook/1"))
+    public void testSave() throws Exception {
+        // SEQ_LOJA_DOCUMENTO处于初始状态。它在持久化时生成 ID = 1，这会与您手动插入的行发生冲突
+        // 从5.2开始支持APPLICATION_JSON_VALUE，因为像Chrome这样的主流浏览器现在都符合规范，并且可以正确解释UTF-8特殊字符，而不需要charset=UTF-8参数。@Deprecated APPLICATION_JSON_UTF8_VALUE
+        String content = mockMvc.perform(post("/addressBook/save")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{      \"userId\": 1,\n" +
+                                "        \"consignee\": \"云志\",\n" +
+                                "        \"phone\": \"15210675046\",\n" +
+                                "        \"sex\": \"0\",\n" +
+                                "        \"provinceCode\": \"01\",\n" +
+                                "        \"provinceName\": \"河北\",\n" +
+                                "        \"cityCode\": \"0011\",\n" +
+                                "        \"cityName\": \"北京\",\n" +
+                                "        \"districtCode\": \"2224\",\n" +
+                                "        \"districtName\": \"昌平区\",\n" +
+                                "        \"detail\": \"这是首都北京\",\n" +
+                                "        \"label\": \"首都\",\n" +
+                                "        \"isDefault\": 1,\n" +
+                                "        \"isDeleted\": 1\n" +
+                                "    }")
+                        .accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        AddressBook addressBook = JSON.parseObject(JSONObject.toJSONString(JSON.parseObject(content, Result.class).getDatas()), AddressBook.class);
+//        Result result=JSON.parseObject(content, Result.class);
+//        System.out.println("++++++++++=="+result);
+//        String obj=JSONObject.toJSONString(result.getDatas());
+//        AddressBook addressBook=JSON.parseObject(obj,AddressBook.class);
+        Assert.isTrue(addressBook.getUserId() == 1, "userid比较数据错误");
+        Assert.isTrue(addressBook.getConsignee().equals("云志"), "比较consignee数据错误");
+
+    }
+
+    @Test
+    public void testGet() throws Exception {
+        mockMvc.perform(get("/addressBook/100"))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\n" +
                         "    \"datas\": {\n" +
-                        "        \"id\": 1,\n" +
+                        "        \"id\": 100,\n" +
                         "        \"userId\": 1,\n" +
                         "        \"consignee\": \"霜霜\",\n" +
                         "        \"phone\": \"15210675046\",\n" +
@@ -69,12 +123,96 @@ public class AddressBookControllerTest {
                         "}"));
     }
 
+    @Test
+    public void testListByUserId() throws Exception {
+        mockMvc.perform(get("/addressBook/list/1"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+    }
 
     @Test
-    public void testAetAllConsignee() throws Exception {
+    public void testDeleteById() throws Exception {
+        mockMvc.perform(delete("/addressBook/100"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"datas\":null,\"resp_code\":200,\"resp_msg\":\"操作成功!\"}"));
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        String content = mockMvc.perform(put("/addressBook/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{      \n" +
+                                "        \"id\": 101,\n" +
+                                "        \"userId\": 1,\n" +
+                                "        \"consignee\": \"云志\",\n" +
+                                "        \"phone\": \"15210675046\",\n" +
+                                "        \"sex\": \"0\",\n" +
+                                "        \"provinceCode\": \"01\",\n" +
+                                "        \"provinceName\": \"河北\",\n" +
+                                "        \"cityCode\": \"0011\",\n" +
+                                "        \"cityName\": \"北京\",\n" +
+                                "        \"districtCode\": \"2224\",\n" +
+                                "        \"districtName\": \"昌平区\",\n" +
+                                "        \"detail\": \"这是首都北京\",\n" +
+                                "        \"createTime\": \"2024-03-26T15:51:13\",\n" +
+                                "        \"label\": \"首都\",\n" +
+                                "        \"createUser\": 1111111,\n" +
+                                "        \"isDefault\": 1,\n" +
+                                "        \"isDeleted\": 1\n" +
+                                "    }")
+                        .accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        AddressBook addressBook = JSON.parseObject(JSONObject.toJSONString(JSON.parseObject(content, Result.class).getDatas()), AddressBook.class);
+        Assert.isTrue(addressBook.getUserId() == 1, "Userid is wrong");
+        Assert.isTrue(addressBook.getConsignee().equals("云志"), "Consignee is wrong");
+        Assert.isTrue(addressBook.getCityName().equals("北京"), "CityName is wrong");
+        Assert.isTrue(addressBook.getProvinceName().equals("河北"), "ProvinceName is wrong");
+        Assert.isTrue(addressBook.getDistrictName().equals("昌平区"), "DistrictName is wrong");
+        Assert.isTrue(addressBook.getDetail().equals("这是首都北京"), "Detail is wrong");
+        Assert.isTrue(addressBook.getProvinceCode().equals("01"), "ProvinceCodee is wrong");
+        Assert.isTrue(addressBook.getCityCode().equals("0011"), "CityCode is wrong");
+        Assert.isTrue(addressBook.getLabel().equals("首都"), "Label is wrong");
+
+
+    }
+
+    @Test
+    public void testGetAllUserInfo() throws Exception {
+        mockMvc.perform(get("/addressBook/UserInfo/2"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"datas\":null,\"resp_code\":200,\"resp_msg\":\"操作成功!\"}"));
+
+    }
+
+    @Test
+    public void testGetUserInfoByPage() throws Exception {
+        String content = mockMvc.perform(get("/addressBook/UserInfoByPage/1/0/6")
+                        .accept(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andDo(print())
+                .andExpect(status().isOk())
+
+                .andReturn().getResponse().getContentAsString();
+        PageResult result = JSON.parseObject(content, PageResult.class);
+        Assert.isTrue(result.getrespCode() == 200, "RespCode is error");
+        Assert.isTrue(result.getrespMsg().equals("操作成功!"), "RespMsg is error");
+        String obj = JSONObject.toJSONString(result.getDatas());
+        List<AddressBook> addressBookList = JSON.parseObject(obj, List.class);
+        System.out.println("-----------" + addressBookList);
+        Assert.isTrue(addressBookList.size() == 2, "List size is error");
+    }
+
+
+    @Test
+    public void testAllConsignee() throws Exception {
         mockMvc.perform(get("/addressBook/consignee"))
-                        .andExpect(status().isOk())
-                        .andExpect(content().json("{\"datas\":[\"霜霜\"],\"resp_code\":200,\"resp_msg\":\"操作成功!\"}"));
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"datas\":[\"云志\",\"霜霜\"],\"resp_code\":200,\"resp_msg\":\"操作成功!\"}"));
     }
 
     // WebTestClient 是围绕 WebClient 的薄壳，可用于执行请求并公开专用的流利API来验证响应。

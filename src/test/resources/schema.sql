@@ -2,10 +2,10 @@ CREATE SCHEMA test;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for user
+-- Table structure for user_info
 -- ----------------------------
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user`
+DROP TABLE IF EXISTS `user_info`;
+CREATE TABLE `user_info`
 (
     `id`        bigint(20) PRIMARY KEY NOT NULL COMMENT '主键',
     `name`      varchar(50) COMMENT '姓名',
@@ -38,12 +38,12 @@ CREATE TABLE `address_book`
     `district_name` varchar(32) COMMENT '区级名称',
     `detail`        varchar(200) COMMENT '详细地址',
     `label`         varchar(100) COMMENT '标签',
-    `is_default`    tinyint(4)             NOT NULL DEFAULT '0' COMMENT '默认 0 否 1是',
-    `create_time`   datetime               NOT NULL COMMENT '创建时间',
-    `update_time`   datetime               NOT NULL COMMENT '更新时间',
-    `create_user`   bigint(20)             NOT NULL COMMENT '创建人',
-    `update_user`   bigint(20)             NOT NULL COMMENT '修改人',
-    `is_deleted`    tinyint(4)             NOT NULL DEFAULT '0' COMMENT '是否删除',
+    `is_default`    tinyint(4)  NOT NULL DEFAULT '0' COMMENT '默认 0 否 1是',
+    `create_time`   datetime    NOT NULL COMMENT '创建时间',
+    `update_time`   datetime    NOT NULL COMMENT '更新时间',
+    `create_user`   bigint(20)  NOT NULL COMMENT '创建人',
+    `update_user`   bigint(20)  NOT NULL COMMENT '修改人',
+    `is_deleted`    tinyint(4)  NOT NULL DEFAULT '0' COMMENT '是否删除',
     PRIMARY KEY (`id`)
 ) COMMENT ='地址管理';
 

@@ -15,7 +15,6 @@ public interface AddressBookService {
 
     void deleteById(Long id);
 
-    AddressBook update(AddressBook addressBook);
 
     UserAddressBookDto getAllUserInfo(Long id);
 
