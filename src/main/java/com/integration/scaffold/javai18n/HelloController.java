@@ -3,10 +3,8 @@ package com.integration.scaffold.javai18n;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.Arrays;
 import java.util.Locale;
 
 @Controller
@@ -19,9 +17,8 @@ public class HelloController {
     // -- Switch between languages(Englich,Chinese..)   URL paramter:?lang=xx
 
     @GetMapping("/")
-    public String hello(Model model, HttpServletRequest request) {
+    public String hello( HttpServletRequest request) {
         // 修改语言是在浏览器上修改，比如谷歌 设置  语言
-        model.addAllAttributes(Arrays.asList("pageTitle", "Home"));
         Locale currentLocal = request.getLocale();
         String countryCode = currentLocal.getCountry();
         String countryName = currentLocal.getDisplayCountry();
