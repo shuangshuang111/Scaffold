@@ -31,10 +31,10 @@ CREATE TABLE `address_book` (
 
 
 -- ----------------------------
--- Table structure for user
+-- Table structure for user_info
 -- ----------------------------
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
+DROP TABLE IF EXISTS `user_info`;
+CREATE TABLE `user_info` (
                         `id` bigint(20) NOT NULL COMMENT '主键',
                         `name` varchar(50) COLLATE utf8_bin DEFAULT NULL COMMENT '姓名',
                         `phone` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '手机号',

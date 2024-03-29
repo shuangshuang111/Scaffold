@@ -8,8 +8,8 @@ import java.util.List;
 public class PageResult <T>{
     // todo 这里是在百度借鉴的，并没有在重量级的文档上看到，以后会做修改 不清楚它是否要实现序列化接口，所以未实现，并且没有重写equals和hashCode方法
     private Integer total;
-    private Integer resp_code;
-    private String resp_msg;
+    private Integer respCode;
+    private String respMsg;
     private List<T> datas;
 
     public static <T> PageResult<T> success(long total, List<T> list) {
@@ -38,12 +38,12 @@ public class PageResult <T>{
         return this.total;
     }
 
-    public Integer getResp_code() {
-        return this.resp_code;
+    public Integer getrespCode() {
+        return this.respCode;
     }
 
-    public String getResp_msg() {
-        return this.resp_msg;
+    public String getrespMsg() {
+        return this.respMsg;
     }
 
     public List<T> getDatas() {
@@ -54,12 +54,12 @@ public class PageResult <T>{
         this.total = total;
     }
 
-    public void setResp_code(Integer resp_code) {
-        this.resp_code = resp_code;
+    public void setrespCode(Integer respCode) {
+        this.respCode = respCode;
     }
 
-    public void setResp_msg(String resp_msg) {
-        this.resp_msg = resp_msg;
+    public void setrespMsg(String respMsg) {
+        this.respMsg = respMsg;
     }
 
     public void setDatas(List<T> datas) {
@@ -70,15 +70,15 @@ public class PageResult <T>{
     public PageResult() {
     }
 
-    public PageResult(Integer resp_code, String resp_msg) {
-        this.resp_code = resp_code;
-        this.resp_msg = resp_msg;
+    public PageResult(Integer respCode, String respMsg) {
+        this.respCode = respCode;
+        this.respMsg = respMsg;
     }
 
-    public PageResult(Integer total, Integer resp_code, String resp_msg, List<T> datas) {
+    public PageResult(Integer total, Integer respCode, String respMsg, List<T> datas) {
         this.total = total;
-        this.resp_code = resp_code;
-        this.resp_msg = resp_msg;
+        this.respCode = respCode;
+        this.respMsg = respMsg;
         this.datas = datas;
     }
 

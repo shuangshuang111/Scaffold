@@ -79,7 +79,7 @@ public class AddressBookController {
         // 第一次调试的时候   2024-03-24T19:07:10.108+08:00  WARN 18112 --- [Scaffold] [nio-8080-exec-7] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException:
         // JSON parse error: Cannot construct instance of `com.integration.scaffold.relationaldataaccess.mysql.entity.AddressBook` (although at least one Creator exists): no String-argument constructor/factory
         // method to deserialize from String value ('id')]  -------postman发请求的JSON格式写错了
-        return Result.success(addressBookService.update(addressBook));
+        return Result.success(addressBookService.save(addressBook));
     }
 
 
