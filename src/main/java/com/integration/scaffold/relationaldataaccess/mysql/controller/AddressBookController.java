@@ -5,6 +5,8 @@ import com.integration.scaffold.relationaldataaccess.mysql.common.Result;
 import com.integration.scaffold.relationaldataaccess.mysql.dto.UserAddressBookDto;
 import com.integration.scaffold.relationaldataaccess.mysql.entity.AddressBook;
 import com.integration.scaffold.relationaldataaccess.mysql.service.AddressBookService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/addressBook")
 public class AddressBookController {
+    Logger logger = LoggerFactory.getLogger(AddressBookController.class);
+
+
     /*
      业务含义不大，主要是集成mysql的测试
     *  以地址管理为例，写一套关于mysql操作的增删改查
@@ -40,6 +45,7 @@ public class AddressBookController {
 
     @GetMapping("/{id}")
     public Result<AddressBook> get(@PathVariable Long id) {
+        logger.info("Hello world.收拾收拾");
         AddressBook addressBook = addressBookService.getById(id);
         return Result.success(addressBook);
     }
