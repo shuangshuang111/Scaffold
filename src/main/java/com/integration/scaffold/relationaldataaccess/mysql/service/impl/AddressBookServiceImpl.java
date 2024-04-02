@@ -10,22 +10,28 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import org.springframework.beans.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.*;
 
 @Service
 public class AddressBookServiceImpl implements AddressBookService {
+
+    Logger logger = LoggerFactory.getLogger(AddressBookServiceImpl.class);
     // todo CrudRepository的扩展接口是PagingAndSortingRepository，它提供了额外的方法来使用分页和排序的抽象来检索实体。
     @Autowired
     private AddressBookRepository addressBookRepository;
@@ -33,10 +39,14 @@ public class AddressBookServiceImpl implements AddressBookService {
     @Autowired
     private UserRepository userRepository;
 
+    public static  Integer  EACH_INSERT=100;
+
+    public static  Integer  TOTAL_INSERT_DATA=100000;
+
     @Override
     public AddressBook save(AddressBook addressBook) {
 
-        if(Optional.ofNullable(addressBook.getId()).isPresent() ){
+        if (Optional.ofNullable(addressBook.getId()).isPresent()) {
             addressBook.setUpdateTime(LocalDateTime.now());
             addressBook.setUpdateUser(11111111l);
             return addressBookRepository.save(addressBook);
@@ -121,4 +131,81 @@ public class AddressBookServiceImpl implements AddressBookService {
         return addressBookRepository.getAllConsignee();
     }
 
+    @Override
+    public void testSyncInsertDatas() {
+
+        // 插入2万条数据，for循环插入，一次插入1千条
+        for (int i = 0; i < TOTAL_INSERT_DATA / EACH_INSERT; i++) {
+            List<AddressBook> addressBookList = new ArrayList<>();
+            for (int j = 0; j < EACH_INSERT; j++) {
+
+                AddressBook addressBook = new AddressBook();
+                addressBook.setUpdateUser(3333333l);
+                addressBook.setCreateUser(3333333l);
+                addressBook.setCreateTime(LocalDateTime.now());
+                addressBook.setUpdateTime(LocalDateTime.now());
+                addressBook.setConsignee(new String[]{"云志", "霜霜", "栓栓"}[(int) Math.random() * 3]);
+                addressBook.setUserId(2l);
+                addressBook.setIsDeleted(1);
+                addressBook.setIsDefault(1);
+                addressBook.setSex("0");
+                addressBook.setPhone("15210675046");
+                addressBook.setDetail("test SyncInsert" + LocalDateTime.now());
+                addressBookList.add(addressBook);
+
+            }
+
+
+
+            List<AddressBook> addressBooks = addressBookRepository.saveAll(addressBookList);
+            if (addressBooks.size() == EACH_INSERT) {
+                logger.info("第" + i + "个"+EACH_INSERT+"地址插入成功");
+            }
+
+        }
+        logger.info(TOTAL_INSERT_DATA + "个地址插入成功");
+
+    }
+
+    @Override
+   // @Async
+    public Integer testAsyncInsertDatas() {
+        int actualtotal = 0;
+
+        for (int i = 0; i < TOTAL_INSERT_DATA / EACH_INSERT; i++) {
+            List<AddressBook> addressBookList = new ArrayList<>();
+            for (int j = 0; j < EACH_INSERT; j++) {
+
+                AddressBook addressBook = new AddressBook();
+                addressBook.setUpdateUser(3333333l);
+                addressBook.setCreateUser(3333333l);
+                addressBook.setCreateTime(LocalDateTime.now());
+                addressBook.setUpdateTime(LocalDateTime.now());
+                addressBook.setConsignee(new String[]{"云志", "霜霜", "栓栓"}[(int) Math.random() * 3]);
+                addressBook.setUserId(2l);
+                addressBook.setIsDeleted(1);
+                addressBook.setIsDefault(1);
+                addressBook.setSex("0");
+                addressBook.setPhone("15210675046");
+                addressBook.setDetail("test SyncInsert" + LocalDateTime.now());
+                addressBookList.add(addressBook);
+                actualtotal += EACH_INSERT;
+
+            }
+
+
+            List<AddressBook> addressBooks = addressBookRepository.saveAll(addressBookList);
+            if (addressBooks.size() == EACH_INSERT) {
+                logger.info("异步第" + i + "个" + EACH_INSERT + "地址插入成功");
+            }
+
+        }
+        logger.info(TOTAL_INSERT_DATA + "个地址异步插入成功");
+        if(actualtotal!=TOTAL_INSERT_DATA){
+            throw new RuntimeException("批量异步插入数据失败");
+        }
+
+
+        return actualtotal;
+    }
 }

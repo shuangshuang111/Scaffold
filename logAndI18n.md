@@ -1,3 +1,17 @@
+国际化代码步骤
+Steps:
+--Understand Locale(know language codes)
+--Configure Locale resolver and interceptor in spring
+-- Create languge files(messages_XX.properties)  messages.properties:default
+-- Update Thymeleaf views for i18n  Print text:[[#{key}]]  Attribute:th:value="#{key}"
+-- Switch between languages(Englich,Chinese..)   URL paramter:?lang=xx
+优雅停机
+所有四个嵌入式Web服务器（Jetty、Reactor Netty、Tomcat和Undertow）以及基于响应式和Servlet的Web应用都支持优雅关闭。 它作为关闭应用程序上下文的一部分发生，
+并在停止 SmartLifecycle bean的最早阶段执行。 这种停止处理使用一个超时，提供一个宽限期，在此期间，现有的请求将被允许完成，但不允许有新的请求。 
+不允许新请求的确切方式取决于正在使用的网络服务器。 Jetty、Reactor Netty和Tomcat将在网络层停止接受请求。 Undertow将接受请求，但立即响应服务不可用（503）的回应
+使用Tomcat的优雅关机需要Tomcat 9.0.33或更高版本
+要启用优雅关机，配置 server.shutdown 属性
+要配置超时时间，请配置 spring.lifecycle.timeout-per-shutdown-phase 属性
 spring官网介绍了3种日志框架
 Spring Boot使用Commons Logging进行所有内部日志记录但使底层日志实现保持开放状态。为Java Util Logging、Log4j2和Logback提供了默认配置。
 

@@ -5,6 +5,7 @@ import com.integration.scaffold.relationaldataaccess.mysql.entity.AddressBook;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 public interface AddressBookService {
     AddressBook save(AddressBook addressBook);
@@ -23,4 +24,8 @@ public interface AddressBookService {
 
 
     List<String> getAllConsignee();
+
+    void testSyncInsertDatas();
+
+    Integer testAsyncInsertDatas();
 }

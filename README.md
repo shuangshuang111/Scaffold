@@ -9,3 +9,8 @@
 ----3.2 加入事务，日志，切面，异常处理
 ----3.3 加入国际化 多线程  定时任务
 4.加入优雅停机 ---优雅停机已加入，但没有测试
+
+
+继续集成swagger，gateway config http接口调用 feigh接口调用 缓存 邮件 JMS mq mycate  profiles mango
+文件上传 下载 Excel上传下载  参数校验（Validating Form Input）  异步方法（Creating Asynchronous Methods）
+分布式锁  分布式事务 分布式任务调度
