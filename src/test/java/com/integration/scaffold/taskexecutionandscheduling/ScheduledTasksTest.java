@@ -52,8 +52,8 @@ public class ScheduledTasksTest {
     private Callable<Boolean> syncUserIsAdded() throws ExecutionException, InterruptedException {
         tasks.syncInsertDatas();
         log.info("list的实际长度为--------------------------------------" + addressBookRepository.findAll().size());
-
-        int expectedlength = AddressBookServiceImpl.TOTAL_INSERT_DATA += 2;
+        Integer total = AddressBookServiceImpl.TOTAL_INSERT_DATA;
+        int expectedlength = total += 2;
 
         return () -> addressBookRepository.findAll().size() == expectedlength; // The condition that must be fulfilled
     }

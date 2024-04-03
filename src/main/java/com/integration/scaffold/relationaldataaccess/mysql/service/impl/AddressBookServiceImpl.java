@@ -18,15 +18,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.*;
 
 @Service
 public class AddressBookServiceImpl implements AddressBookService {
@@ -39,9 +36,9 @@ public class AddressBookServiceImpl implements AddressBookService {
     @Autowired
     private UserRepository userRepository;
 
-    public static  Integer  EACH_INSERT=100;
+    public static final Integer EACH_INSERT = 100;
 
-    public static  Integer  TOTAL_INSERT_DATA=100000;
+    public static final Integer TOTAL_INSERT_DATA = 100000;
 
     @Override
     public AddressBook save(AddressBook addressBook) {
@@ -156,10 +153,9 @@ public class AddressBookServiceImpl implements AddressBookService {
             }
 
 
-
             List<AddressBook> addressBooks = addressBookRepository.saveAll(addressBookList);
             if (addressBooks.size() == EACH_INSERT) {
-                logger.info("第" + i + "个"+EACH_INSERT+"地址插入成功");
+                logger.info("第" + i + "个" + EACH_INSERT + "地址插入成功");
             }
 
         }
@@ -168,7 +164,7 @@ public class AddressBookServiceImpl implements AddressBookService {
     }
 
     @Override
-   // @Async
+    // @Async
     public Integer testAsyncInsertDatas() {
         int actualtotal = 0;
 
@@ -201,7 +197,7 @@ public class AddressBookServiceImpl implements AddressBookService {
 
         }
         logger.info(TOTAL_INSERT_DATA + "个地址异步插入成功");
-        if(actualtotal!=TOTAL_INSERT_DATA){
+        if (actualtotal != TOTAL_INSERT_DATA) {
             throw new RuntimeException("批量异步插入数据失败");
         }
 

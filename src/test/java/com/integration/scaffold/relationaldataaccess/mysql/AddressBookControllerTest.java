@@ -93,12 +93,12 @@ public class AddressBookControllerTest {
 
     @Test
     public void testGet() throws Exception {
-        mockMvc.perform(get("/addressBook/100"))
+        mockMvc.perform(get("/addressBook/100000000000"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\n" +
                         "    \"datas\": {\n" +
-                        "        \"id\": 100,\n" +
+                        "        \"id\": 100000000000,\n" +
                         "        \"userId\": 1,\n" +
                         "        \"consignee\": \"霜霜\",\n" +
                         "        \"phone\": \"15210675046\",\n" +
@@ -203,7 +203,7 @@ public class AddressBookControllerTest {
         String obj = JSONObject.toJSONString(result.getDatas());
         List<AddressBook> addressBookList = JSON.parseObject(obj, List.class);
         System.out.println("-----------" + addressBookList);
-        Assert.isTrue(addressBookList.size() == 2, "List size is error");
+        Assert.isTrue(addressBookList.size() == 3, "List size is error");
     }
 
 
