@@ -44,7 +44,7 @@ public class ScheduledTasksTest {
         // 开始构建一个await语句。返回:条件工厂
 
         await().atMost(Durations.TEN_SECONDS).untilAsserted(() -> {
-            verify(tasks, atLeast(1)).reportCurrentTime();
+            verify(tasks, atLeast(2)).reportCurrentTime();
         });
     }
 
@@ -67,8 +67,9 @@ public class ScheduledTasksTest {
 
     private Callable<Boolean> asyncUserIsAdded() throws ExecutionException, InterruptedException {
 
-        tasks.asyncInsertDatas();
+        String str=tasks.asyncInsertDatas();
         Thread.sleep(20000);
+        log.info("返回值为:"+str);
         return () -> true;
     }
 
