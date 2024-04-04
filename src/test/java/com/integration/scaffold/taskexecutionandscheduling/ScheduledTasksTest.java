@@ -15,8 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.Assert;
 
 import java.time.Duration;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
@@ -49,40 +48,40 @@ public class ScheduledTasksTest {
     }
 
 
-    private Callable<Boolean> syncUserIsAdded() throws ExecutionException, InterruptedException {
-        tasks.syncInsertDatas();
-        log.info("list的实际长度为--------------------------------------" + addressBookRepository.findAll().size());
-        Integer total = AddressBookServiceImpl.TOTAL_INSERT_DATA;
-        int expectedlength = total += 2;
+    @Test
+    public void testSyncInsertDatas() {
+        addressBookRepository.deleteAll();
+        await().atMost(Duration.of(30, SECONDS)).until(() -> {
+            tasks.syncInsertDatas();
+            log.info("list的实际长度为--------------------------------------" + addressBookRepository.findAll().size());
 
-        return () -> addressBookRepository.findAll().size() == expectedlength; // The condition that must be fulfilled
+            return addressBookRepository.findAll().size() == AddressBookServiceImpl.TOTAL_INSERT_DATA;
+        });
+        addressBookRepository.deleteAll();
+
     }
 
     @Test
-    public void testSyncInsertDatas() throws ExecutionException, InterruptedException {
+    public void testAsyncInsertDatas() {
 
-        await().atMost(Duration.of(30, SECONDS)).until(syncUserIsAdded());
+        await().atMost(Duration.of(30, SECONDS)).until(() -> {
+            Future future = tasks.asyncInsertDatas();
+            while (true) {
+                if (future.isDone()) {
+                    log.info("返回值为:" + future.get());
+                    break;
 
-    }
+                }
 
-    private Callable<Boolean> asyncUserIsAdded() throws ExecutionException, InterruptedException {
+            }
 
-        String str=tasks.asyncInsertDatas();
-        Thread.sleep(20000);
-        log.info("返回值为:"+str);
-        return () -> true;
-    }
-
-    @Test
-    public void testAsyncInsertDatas() throws ExecutionException, InterruptedException {
-        await().atMost(Duration.of(30, SECONDS)).until(asyncUserIsAdded());
+            return true;
+        });
 
         int size = addressBookRepository.findAll().size();
         log.info("size:" + size);
-        Integer total = AddressBookServiceImpl.TOTAL_INSERT_DATA;
-        int expectedlength = total * 2 + 2;
-        log.info("expectedlength:" + expectedlength);
-        Assert.isTrue(size == expectedlength, "插入数据错误");
+        Assert.isTrue(size == AddressBookServiceImpl.TOTAL_INSERT_DATA, "插入数据错误");
+        addressBookRepository.deleteAll();
 
     }
 

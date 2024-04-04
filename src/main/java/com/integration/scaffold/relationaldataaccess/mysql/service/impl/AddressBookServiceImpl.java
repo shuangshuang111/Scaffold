@@ -185,10 +185,10 @@ public class AddressBookServiceImpl implements AddressBookService {
                 addressBook.setPhone("15210675046");
                 addressBook.setDetail("test SyncInsert" + LocalDateTime.now());
                 addressBookList.add(addressBook);
-                actualtotal += EACH_INSERT;
+
 
             }
-
+            actualtotal += EACH_INSERT;
 
             List<AddressBook> addressBooks = addressBookRepository.saveAll(addressBookList);
             if (addressBooks.size() == EACH_INSERT) {
