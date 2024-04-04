@@ -19,7 +19,7 @@ public class ConverTest {
     @Test
     void whenUsingNonAsync_thenMainThreadIsUsed() throws Exception {
         CompletableFuture<String> name = CompletableFuture.supplyAsync(() -> "Baeldung");
-        System.out.println(Thread.currentThread().getName());
+        printCurrentThread();
         CompletableFuture<Integer> nameLength = name.thenApply(value -> {
             printCurrentThread(); // will print "main"
             return value.length();
@@ -36,7 +36,7 @@ public class ConverTest {
     @Test
     void whenUsingAsync_thenUsesCommonPool() throws Exception {
         CompletableFuture<String> name = CompletableFuture.supplyAsync(() -> "Baeldung");
-        System.out.println(Thread.currentThread().getName());
+        printCurrentThread();
         CompletableFuture<Integer> nameLength = name.thenApplyAsync(value -> {
             printCurrentThread(); // will print "ForkJoinPool.commonPool-worker-1"
             return value.length();
