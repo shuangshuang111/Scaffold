@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class AddressBookServiceImpl implements AddressBookService {
@@ -136,22 +137,10 @@ public class AddressBookServiceImpl implements AddressBookService {
             List<AddressBook> addressBookList = new ArrayList<>();
             for (int j = 0; j < EACH_INSERT; j++) {
 
-                AddressBook addressBook = new AddressBook();
-                addressBook.setUpdateUser(3333333l);
-                addressBook.setCreateUser(3333333l);
-                addressBook.setCreateTime(LocalDateTime.now());
-                addressBook.setUpdateTime(LocalDateTime.now());
-                addressBook.setConsignee(new String[]{"云志", "霜霜", "栓栓"}[(int) Math.random() * 3]);
-                addressBook.setUserId(2l);
-                addressBook.setIsDeleted(1);
-                addressBook.setIsDefault(1);
-                addressBook.setSex("0");
-                addressBook.setPhone("15210675046");
-                addressBook.setDetail("test SyncInsert" + LocalDateTime.now());
+                AddressBook addressBook = randomCreateAddressBook();
                 addressBookList.add(addressBook);
 
             }
-
 
             List<AddressBook> addressBooks = addressBookRepository.saveAll(addressBookList);
             if (addressBooks.size() == EACH_INSERT) {
@@ -163,6 +152,39 @@ public class AddressBookServiceImpl implements AddressBookService {
 
     }
 
+    public AddressBook randomCreateAddressBook() {
+        AddressBook addressBook = new AddressBook();
+        // 生成一个20位随机数
+
+        addressBook.setUserId(new Random().nextLong(900000000) + 100000000);
+
+        addressBook.setConsignee(new String[]{"云志", "云超", "大栓子", "大霜子", "霜霜", "栓栓"}[new Random().nextInt(6)]);
+
+        addressBook.setSex(new String[]{"0", "1"}[new Random().nextBoolean() ? 1 : 0]);
+        addressBook.setPhone("15" + String.valueOf(new Random().nextInt(900000000) + 100000000));
+
+        addressBook.setProvinceCode(String.valueOf(new Random().nextInt(9000)));
+        addressBook.setProvinceName(new String[]{"河南省", "河北省", "陕西省", "山西省", "江西省", "广东省"}[new Random().nextInt(6)]);
+
+        addressBook.setCityCode(String.valueOf(new Random().nextInt(9000)));
+        addressBook.setCityName(new String[]{"新乡市", "北京市", "深圳市", "上海市", "洛阳市", "南京市"}[new Random().nextInt(6)]);
+
+        addressBook.setDistrictCode(String.valueOf(new Random().nextInt(9000)));
+        addressBook.setDistrictName(new String[]{"上城区", "下沙区", "昌平区", "房山区", "大兴区", "通州区"}[new Random().nextInt(6)]);
+
+        addressBook.setDetail(addressBook.getProvinceName() + addressBook.getCityName() + addressBook.getDistrictName() + "真是一个好地方！" + LocalDateTime.now());
+
+        addressBook.setLabel(addressBook.getProvinceCode() + "-" + addressBook.getCityCode() + "-" + addressBook.getDistrictCode());
+
+        addressBook.setIsDefault(new Integer[]{0, 1}[new Random().nextBoolean() ? 1 : 0]);
+        addressBook.setCreateUser(new Random().nextLong(900000000) + 100000000);
+        addressBook.setUpdateUser(addressBook.getCreateUser());
+        addressBook.setCreateTime(LocalDateTime.now());
+        addressBook.setUpdateTime(LocalDateTime.now());
+        addressBook.setIsDeleted(new Integer[]{0, 1}[new Random().nextBoolean() ? 1 : 0]);
+        return addressBook;
+    }
+
     @Override
     // @Async
     public Integer testAsyncInsertDatas() {
@@ -171,22 +193,8 @@ public class AddressBookServiceImpl implements AddressBookService {
         for (int i = 0; i < TOTAL_INSERT_DATA / EACH_INSERT; i++) {
             List<AddressBook> addressBookList = new ArrayList<>();
             for (int j = 0; j < EACH_INSERT; j++) {
-
-                AddressBook addressBook = new AddressBook();
-                addressBook.setUpdateUser(3333333l);
-                addressBook.setCreateUser(3333333l);
-                addressBook.setCreateTime(LocalDateTime.now());
-                addressBook.setUpdateTime(LocalDateTime.now());
-                addressBook.setConsignee(new String[]{"云志", "霜霜", "栓栓"}[(int) Math.random() * 3]);
-                addressBook.setUserId(2l);
-                addressBook.setIsDeleted(1);
-                addressBook.setIsDefault(1);
-                addressBook.setSex("0");
-                addressBook.setPhone("15210675046");
-                addressBook.setDetail("test SyncInsert" + LocalDateTime.now());
+                AddressBook addressBook = randomCreateAddressBook();
                 addressBookList.add(addressBook);
-
-
             }
             actualtotal += EACH_INSERT;
 
