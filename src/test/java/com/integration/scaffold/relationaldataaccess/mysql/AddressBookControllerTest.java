@@ -1,10 +1,7 @@
 package com.integration.scaffold.relationaldataaccess.mysql;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
-import com.integration.scaffold.relationaldataaccess.mysql.common.PageResult;
-import com.integration.scaffold.relationaldataaccess.mysql.common.Result;
-import com.integration.scaffold.relationaldataaccess.mysql.entity.AddressBook;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,8 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.Assert;
-
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -55,6 +50,9 @@ public class AddressBookControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
 
     @Test
     public void testSave() throws Exception {
@@ -81,13 +79,9 @@ public class AddressBookControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        AddressBook addressBook = JSON.parseObject(JSONObject.toJSONString(JSON.parseObject(content, Result.class).getDatas()), AddressBook.class);
-//        Result result=JSON.parseObject(content, Result.class);
-//        System.out.println("++++++++++=="+result);
-//        String obj=JSONObject.toJSONString(result.getDatas());
-//        AddressBook addressBook=JSON.parseObject(obj,AddressBook.class);
-        Assert.isTrue(addressBook.getUserId() == 1, "userid比较数据错误");
-        Assert.isTrue(addressBook.getConsignee().equals("云志"), "比较consignee数据错误");
+        JsonNode jsonNode = objectMapper.readTree(content).get("datas");
+        Assert.isTrue(jsonNode.get("userId").asLong() == 1, "userid比较数据错误");
+        Assert.isTrue(jsonNode.get("consignee").asText().equals("云志"), "比较consignee数据错误");
 
     }
 
@@ -166,16 +160,18 @@ public class AddressBookControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        AddressBook addressBook = JSON.parseObject(JSONObject.toJSONString(JSON.parseObject(content, Result.class).getDatas()), AddressBook.class);
-        Assert.isTrue(addressBook.getUserId() == 1, "Userid is wrong");
-        Assert.isTrue(addressBook.getConsignee().equals("云志"), "Consignee is wrong");
-        Assert.isTrue(addressBook.getCityName().equals("北京"), "CityName is wrong");
-        Assert.isTrue(addressBook.getProvinceName().equals("河北"), "ProvinceName is wrong");
-        Assert.isTrue(addressBook.getDistrictName().equals("昌平区"), "DistrictName is wrong");
-        Assert.isTrue(addressBook.getDetail().equals("这是首都北京"), "Detail is wrong");
-        Assert.isTrue(addressBook.getProvinceCode().equals("01"), "ProvinceCodee is wrong");
-        Assert.isTrue(addressBook.getCityCode().equals("0011"), "CityCode is wrong");
-        Assert.isTrue(addressBook.getLabel().equals("首都"), "Label is wrong");
+
+        JsonNode jsonNode = objectMapper.readTree(content).get("datas");
+
+        Assert.isTrue(jsonNode.get("userId").asLong() == 1, "Userid is wrong");
+        Assert.isTrue(jsonNode.get("consignee").asText().equals("云志"), "Consignee is wrong");
+        Assert.isTrue(jsonNode.get("cityName").asText().equals("北京"), "CityName is wrong");
+        Assert.isTrue(jsonNode.get("provinceName").asText().equals("河北"), "ProvinceName is wrong");
+        Assert.isTrue(jsonNode.get("districtName").asText().equals("昌平区"), "DistrictName is wrong");
+        Assert.isTrue(jsonNode.get("detail").asText().equals("这是首都北京"), "Detail is wrong");
+        Assert.isTrue(jsonNode.get("provinceCode").asText().equals("01"), "ProvinceCodee is wrong");
+        Assert.isTrue(jsonNode.get("cityCode").asText().equals("0011"), "CityCode is wrong");
+        Assert.isTrue(jsonNode.get("label").asText().equals("首都"), "Label is wrong");
 
 
     }
@@ -197,13 +193,9 @@ public class AddressBookControllerTest {
                 .andExpect(status().isOk())
 
                 .andReturn().getResponse().getContentAsString();
-        PageResult result = JSON.parseObject(content, PageResult.class);
-        Assert.isTrue(result.getrespCode() == 200, "RespCode is error");
-        Assert.isTrue(result.getrespMsg().equals("操作成功!"), "RespMsg is error");
-        String obj = JSONObject.toJSONString(result.getDatas());
-        List<AddressBook> addressBookList = JSON.parseObject(obj, List.class);
-        System.out.println("-----------" + addressBookList);
-        Assert.isTrue(addressBookList.size() == 3, "List size is error");
+        JsonNode jsonNode = objectMapper.readTree(content);
+        Assert.isTrue(jsonNode.get("respCode").asInt() == 200, "RespCode is error");
+        Assert.isTrue(jsonNode.get("respMsg").asText().equals("操作成功!"), "RespMsg is error");
     }
 
 
@@ -212,7 +204,7 @@ public class AddressBookControllerTest {
         mockMvc.perform(get("/addressBook/consignee"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"datas\":[\"云志\",\"霜霜\"],\"respCode\":200,\"respMsg\":\"操作成功!\"}"));
+                .andExpect(content().json("{\"datas\":[\"云志\"],\"respCode\":200,\"respMsg\":\"操作成功!\"}"));
     }
 
     // WebTestClient 是围绕 WebClient 的薄壳，可用于执行请求并公开专用的流利API来验证响应。

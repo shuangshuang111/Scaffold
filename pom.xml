@@ -16,7 +16,6 @@
     <properties>
         <java.version>21</java.version>
         <mybatis.version>3.0.3</mybatis.version>
-        <fastjson2.version>2.0.48</fastjson2.version>
         <awaitility.version>4.2.0</awaitility.version>
     </properties>
     <dependencies>
@@ -58,11 +57,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2</artifactId>
-            <version>${fastjson2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.awaitility</groupId>

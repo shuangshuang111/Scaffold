@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface AddressBookRepository extends JpaRepository<AddressBook, Long>, JpaSpecificationExecutor<AddressBook> {
 
-    @Query(value = "SELECT DISTINCT(consignee) from address_book", nativeQuery = true)
+    @Query(value = "select distinct a.consignee from AddressBook a ")
     List<String> getAllConsignee();
+
+
 }
