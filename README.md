@@ -9,6 +9,7 @@
 ----3.2 加入事务，日志，切面，异常处理
 ----3.3 加入国际化 多线程  定时任务
 4.加入优雅停机 ---优雅停机已加入，但没有测试
+5.文件上传已完成
 
 
 继续集成swagger，gateway config http接口调用 feigh接口调用 缓存 邮件 JMS mq mycate  profiles mango
