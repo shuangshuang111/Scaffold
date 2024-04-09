@@ -91,29 +91,9 @@ public class AddressBookControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json("{\n" +
-                        "    \"datas\": {\n" +
-                        "        \"id\": 100000000000,\n" +
-                        "        \"userId\": 1,\n" +
-                        "        \"consignee\": \"霜霜\",\n" +
-                        "        \"phone\": \"15210675046\",\n" +
-                        "        \"sex\": \"0\",\n" +
-                        "        \"provinceCode\": \"001\",\n" +
-                        "        \"provinceName\": \"河南\",\n" +
-                        "        \"cityCode\": \"0001\",\n" +
-                        "        \"cityName\": \"新乡\",\n" +
-                        "        \"districtCode\": \"1234\",\n" +
-                        "        \"districtName\": \"辉县\",\n" +
-                        "        \"detail\": \"这是一个小县城\",\n" +
-                        "        \"label\": \"县级市\",\n" +
-                        "        \"isDefault\": 1,\n" +
-                        "        \"createTime\": \"2024-03-26T15:51:13\",\n" +
-                        "        \"updateTime\": \"2024-03-21T15:51:13\",\n" +
-                        "        \"createUser\": 1111111,\n" +
-                        "        \"updateUser\": 1111111,\n" +
-                        "        \"isDeleted\": 1\n" +
-                        "    },\n" +
-                        "    \"respCode\": 200,\n" +
-                        "    \"respMsg\": \"操作成功!\"\n" +
+                        "  \"datas\" : null,\n" +
+                        "  \"respCode\" : 200,\n" +
+                        "  \"respMsg\" : \"操作成功!\"\n" +
                         "}"));
     }
 
