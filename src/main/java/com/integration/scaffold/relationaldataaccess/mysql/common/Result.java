@@ -29,6 +29,10 @@ public class Result <T>{
     public static <T> Result<T> fail(T model) {
         return of(model, CodeEnum.FAILURE.getCode(), CodeEnum.FAILURE.getMessage());
     }
+
+    public static <T> Result<T> fail(String msg) {
+        return of( CodeEnum.FAILURE.getCode(), msg);
+    }
     public static <T> Result<T> fail(T model, String msg) {
         return of(model, CodeEnum.FAILURE.getCode(), msg);
     }

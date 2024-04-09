@@ -2,13 +2,17 @@ package com.integration.scaffold.relationaldataaccess.mysql.controller;
 
 import com.integration.scaffold.relationaldataaccess.mysql.common.PageResult;
 import com.integration.scaffold.relationaldataaccess.mysql.common.Result;
+import com.integration.scaffold.relationaldataaccess.mysql.dto.AddressBookDto;
 import com.integration.scaffold.relationaldataaccess.mysql.dto.UserAddressBookDto;
 import com.integration.scaffold.relationaldataaccess.mysql.entity.AddressBook;
 import com.integration.scaffold.relationaldataaccess.mysql.service.AddressBookService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,7 +43,9 @@ public class AddressBookController {
     private AddressBookService addressBookService;
 
     @PostMapping("/save")
-    public Result<AddressBook> save(@RequestBody AddressBook addressBook) {
+    public Result<AddressBook> save(@RequestBody @Valid AddressBookDto addressBookDto, BindingResult bindingResult) {
+        AddressBook addressBook = new AddressBook();
+        BeanUtils.copyProperties(addressBookDto, addressBook);
         return Result.success(addressBookService.save(addressBook));
     }
 
