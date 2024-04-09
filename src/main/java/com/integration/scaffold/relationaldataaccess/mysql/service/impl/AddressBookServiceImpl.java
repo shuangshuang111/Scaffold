@@ -13,12 +13,12 @@ import jakarta.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
+@Transactional
 public class AddressBookServiceImpl implements AddressBookService {
 
     Logger logger = LoggerFactory.getLogger(AddressBookServiceImpl.class);
@@ -122,7 +123,7 @@ public class AddressBookServiceImpl implements AddressBookService {
 ////         JpaRepository<T, ID> extends ListCrudRepository<T, ID>, ListPagingAndSortingRepository<T, ID>, QueryByExampleExecutor<T>
 ////         QueryByExampleExecutor<T> 里面有<S extends T> Page<S> findAll(Example<S> example, Pageable pageable); 可以写简单点的查询方法
 //        return addressBookPage;
-        return addressBookRepository.findByUserId(userId, PageRequest.of(pageNum,pageSize));
+        return addressBookRepository.findByUserId(userId, PageRequest.of(pageNum, pageSize));
     }
 
     @Override
