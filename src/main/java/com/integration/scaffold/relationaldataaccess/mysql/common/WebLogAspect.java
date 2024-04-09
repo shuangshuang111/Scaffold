@@ -40,7 +40,6 @@ public class WebLogAspect {
             if (obj instanceof BindingResult) {
                 BindingResult bindingResult = (BindingResult) obj;
                 if (bindingResult.hasErrors()) {
-                    System.out.println("------------" + bindingResult.getAllErrors());
                     List<ObjectError> errors = bindingResult.getAllErrors();
                     StringBuffer sb = new StringBuffer();
                     for (ObjectError objectError : errors) {

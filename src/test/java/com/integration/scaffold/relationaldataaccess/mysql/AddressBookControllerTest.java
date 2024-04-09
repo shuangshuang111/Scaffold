@@ -60,7 +60,7 @@ public class AddressBookControllerTest {
         // 从5.2开始支持APPLICATION_JSON_VALUE，因为像Chrome这样的主流浏览器现在都符合规范，并且可以正确解释UTF-8特殊字符，而不需要charset=UTF-8参数。@Deprecated APPLICATION_JSON_UTF8_VALUE
         String content = mockMvc.perform(post("/addressBook/save")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{      \"userId\": 1,\n" +
+                        .content("{      \"userId\": 22223,\n" +
                                 "        \"consignee\": \"云志\",\n" +
                                 "        \"phone\": \"15210675046\",\n" +
                                 "        \"sex\": \"0\",\n" +

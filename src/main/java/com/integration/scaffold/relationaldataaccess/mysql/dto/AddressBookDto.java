@@ -1,5 +1,6 @@
 package com.integration.scaffold.relationaldataaccess.mysql.dto;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -10,6 +11,7 @@ public class AddressBookDto {
 
     //用户id
     @NotNull
+    @Min(2222)
     private Long userId;
 
 
