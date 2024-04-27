@@ -23,3 +23,11 @@ Spring Boot使用Commons Logging进行所有内部日志记录但使底层日志
 日志默认输出到控制台，并不会输出到文件（默认情况下，Spring Boot只记录到控制台，不写日志文件）
 
 因为标准的logback.xml配置文件加载得太早，所以不能在其中使用扩展。需要使用logback-spring.xml或定义一个日志记录。配置属性。本次选用logback-spring.xml进行日志配置。
+
+
+先在百度上搜索springboot3如何集成swagger3.找到了springdoc-openapi-starter-webmvc-ui
+再去chat问这个包什么作用，在官网哪里可以找到这个包
+Springdoc OpenAPI项目并没有一个官方网站，但您可以在其GitHub页面获取相关信息
+GitHub页面链接： Springdoc OpenAPI GitHub（https://github.com/springdoc/springdoc-openapi）
+在这个网址找到了集成的办法
+
