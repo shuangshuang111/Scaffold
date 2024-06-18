@@ -4,6 +4,7 @@ import com.integration.scaffold.relationaldataaccess.mysql.dto.UserAddressBookDt
 import com.integration.scaffold.relationaldataaccess.mysql.entity.AddressBook;
 import com.integration.scaffold.relationaldataaccess.mysql.entity.User;
 import com.integration.scaffold.relationaldataaccess.mysql.mapper.AddressBookRepository;
+import com.integration.scaffold.relationaldataaccess.mysql.mapper.AddressBookSpecs;
 import com.integration.scaffold.relationaldataaccess.mysql.mapper.UserRepository;
 import com.integration.scaffold.relationaldataaccess.mysql.service.AddressBookService;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -87,21 +88,25 @@ public class AddressBookServiceImpl implements AddressBookService {
         Optional<User> optionalUser = userRepository.findById(id);
         // Specification实现动态查询，Root即root 获取实体类具体属性, CriteriaBuilder即cb 拼接查询条件的，拼接好查询条件之后，通过 CriteriaQuery即query 实现查询
         if (optionalUser.isPresent()) {
-            Specification<AddressBook> queryCondition = new Specification<AddressBook>() {
-                @Override
-                public Predicate toPredicate(Root<AddressBook> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                    List<Predicate> predicateList = new ArrayList<>();
-                    if (id != null) {
-                        predicateList.add(criteriaBuilder.equal(root.get("userId"), id));
-                    }
-                    // 这里只是尝试下复杂查询是否真实可用，直接用了数字
-                    predicateList.add(criteriaBuilder.like(root.get("consignee"), "%云志%"));
-                    predicateList.add(criteriaBuilder.between(root.get("id"), 2, 5));
-                    return criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
-                }
-            };
+//            Specification<AddressBook> queryCondition = new Specification<AddressBook>() {
+//
+//                @Override
+//                public Predicate toPredicate(Root<AddressBook> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+//                    List<Predicate> predicateList = new ArrayList<>();
+//                    if (id != null) {
+//                        predicateList.add(criteriaBuilder.equal(root.get("userId"), id));
+//                    }
+//                    // 这里只是尝试下复杂查询是否真实可用，直接用了数字
+//                    predicateList.add(criteriaBuilder.like(root.get("consignee"), "%云志%"));
+//                    predicateList.add(criteriaBuilder.between(root.get("id"), 2, 5));
+//                    return criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
+//
+//                }
+//
+//            };
+
             Sort sort = Sort.by(Sort.Direction.DESC, "updateTime").and(Sort.by(Sort.Direction.ASC, "id"));
-            List<AddressBook> addressBookList = addressBookRepository.findAll(queryCondition, sort);
+            List<AddressBook> addressBookList = addressBookRepository.findAll(AddressBookSpecs.combinedSpecification(id,"云志"), sort);
 
             userAddressBookDto.setAddressBooklist(addressBookList);
             return userAddressBookDto;

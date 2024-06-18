@@ -29,21 +29,6 @@ public class AddressBookController {
     Logger logger = LoggerFactory.getLogger(AddressBookController.class);
 
 
-    /*
-     业务含义不大，主要是集成mysql的测试
-    *  以地址管理为例，写一套关于mysql操作的增删改查
-    * 在此业务中，有三个表 一个是用户表，一个是地址管理表，地址管理表中记录了所有员工的地址信息，每个用户都可以有多个地址
-    *
-    * 新增地址信息（直接有个地址类型可以选择即可）
-    * 修改地址信息（包括地址信息失效）
-    * 根据id查询地址信息（
-    * 查询某用户的全部地址
-    * 删除地址信息（按照ID删除，默认只会修改状态而不是真的删除）
-    * 查询某雇员的所有信息 分页查询
-    * 查询某用户的所有信息（这里只做两张表的关联，判断写SQL是否会出问题，生产上基本也不会有查询三张表的情况） 分页查询和不分页查询
-    *
-    * */
-    // todo 没有做参数校验  异常处理  AOP代理  日志记录，获取当前用户 以后可以加上
 
     @Autowired
     private AddressBookService addressBookService;
